@@ -45,6 +45,9 @@ types and/or earlier versions of extended filesystems are not supported.
 %install
 %makeinstall_std -C build
 
+# (eugeni) remove left-over static library
+rm -f %{buildroot}%{_libdir}/libe4rat-core.a
+
 %clean
 rm -rf %{buildroot}
 
