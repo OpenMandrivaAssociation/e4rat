@@ -1,23 +1,26 @@
-Name:    e4rat
-Version: 0.2.3
-Release: %mkrel 1
-Summary: e4rat is a toolset to accelerate the boot process as well as application startups
-License: GPLv3
-URL:     http://e4rat.sourceforge.net/
-Group:   System/Configuration/Boot and Init
-Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+%define major 0
+%define libname %mklibname %{name}-core %{major}
 
-Source0: http://downloads.sourceforge.net/project/dracut/%{name}_%{version}_src.tar.gz
-Patch0:	e4rat_0.2.1-dynamic-link.patch
-
-BuildRequires: cmake
-BuildRequires: boost-devel
-BuildRequires: ext2fs-devel
-BuildRequires: libblkid-devel
-BuildRequires: audit-devel
-BuildRequires: auparse-devel
-BuildRequires: libstdc++-devel
-BuildRequires: audit
+Summary:	Toolset to accelerate the boot process as well as application startups
+Name:		e4rat
+Version:	0.2.3
+Release:	1
+License:	GPLv3
+Group:		System/Configuration/Boot and Init
+URL:		http://e4rat.sourceforge.net/
+Source0:	http://downloads.sourceforge.net/project/dracut/%{name}_%{version}_src.tar.gz
+Patch1:		e4rat-0.2.2-libdir.patch
+Patch2:		e4rat-0.2.3-shared-build.patch
+BuildRequires:	cmake
+BuildRequires:	boost-devel
+BuildRequires:	ext2fs-devel
+BuildRequires:	libblkid-devel
+BuildRequires:	audit-devel
+BuildRequires:	auparse-devel
+BuildRequires:	libstdc++-devel
+BuildRequires:	audit
+# (tpg) this packages causes negative effect
+Conflicts:	preload
 
 %description
 e4rat ("Ext4 - Reducing Access Times") is a toolset to accelerate the boot
@@ -34,9 +37,18 @@ e4rat is based on the online defragmentation ioctl EXT4_IOC_MOVE_EXT from the
 Ext4 filesystem, which was introduced in Linux Kernel 2.6.31. Other filesystem
 types and/or earlier versions of extended filesystems are not supported. 
 
+%package %{libname}
+Summary:	Main library for %{name}
+Group:		System/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description %{libname}
+Main library for %{name}.
+
 %prep
-%setup -q -n %name-%version
-%patch0 -p1 -b .dynamic-link
+%setup -q
+%patch1 -p1 -b .libdir
+%patch2 -p1 -b .shared
 
 %build
 %cmake
@@ -45,20 +57,17 @@ types and/or earlier versions of extended filesystems are not supported.
 %install
 %makeinstall_std -C build
 
-# (eugeni) remove left-over static library
-rm -f %{buildroot}%{_libdir}/libe4rat-core.a
-
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %doc README
-%config %{_sysconfdir}/%name.conf
-%{_sbindir}/%name-collect
-%{_sbindir}/%name-preload
-%{_sbindir}/%name-realloc
-%{_mandir}/man5/%name.conf.5*
-%{_mandir}/man8/%name-collect.8*
-%{_mandir}/man8/%name-preload.8*
-%{_mandir}/man8/%name-realloc.8*
+%config %{_sysconfdir}/%{name}.conf
+%{_sbindir}/%{name}-collect
+%{_sbindir}/%{name}-preload
+%{_sbindir}/%{name}-realloc
+%{_mandir}/man5/%{name}.conf.5*
+%{_mandir}/man8/%{name}-collect.8*
+%{_mandir}/man8/%{name}-preload.8*
+%{_mandir}/man8/%{name}-realloc.8*
+
+%files %{libname}
+%{_libdir}/lib*%{name}-core.so
+%{_libdir}/lib*%{name}-core.so.%{major}
