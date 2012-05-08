@@ -1,5 +1,5 @@
 Name:    e4rat
-Version: 0.2.1
+Version: 0.2.3
 Release: %mkrel 1
 Summary: e4rat is a toolset to accelerate the boot process as well as application startups
 License: GPLv3
