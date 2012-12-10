@@ -11,10 +11,11 @@ URL:		http://e4rat.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/project/dracut/%{name}_%{version}_src.tar.gz
 Patch1:		e4rat-0.2.2-libdir.patch
 Patch2:		e4rat-0.2.3-shared-build.patch
+Patch3:		e4rat-0.2.3-boostfsv3.patch
 BuildRequires:	cmake
 BuildRequires:	boost-devel
 BuildRequires:	ext2fs-devel
-BuildRequires:	libblkid-devel
+BuildRequires:	pkgconfig(blkid)
 BuildRequires:	audit-devel
 BuildRequires:	auparse-devel
 BuildRequires:	libstdc++-devel
@@ -49,6 +50,7 @@ Main library for %{name}.
 %setup -q
 %patch1 -p1 -b .libdir
 %patch2 -p1 -b .shared
+%patch3 -p0 -b .boost3
 
 %build
 %cmake
