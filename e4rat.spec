@@ -7,7 +7,7 @@ Version:	0.2.3
 Release:	3
 License:	GPLv3
 Group:		System/Configuration/Boot and Init
-URL:		http://e4rat.sourceforge.net/
+URL:		https://e4rat.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/project/dracut/%{name}_%{version}_src.tar.gz
 Patch1:		e4rat-0.2.2-libdir.patch
 Patch2:		e4rat-0.2.3-shared-build.patch
